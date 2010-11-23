@@ -1,0 +1,7 @@
+A quick howto on using these scripts:
+
+add files and filetypes you want to exclude to backup.ignore
+add directories you want to backup to backup.list, according to the format in
+backup.list.example
+
+the backup script itself goes in /root/backup and make a directory called /root/backup/files for the actual backed-up files.
