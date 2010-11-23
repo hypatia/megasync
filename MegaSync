@@ -1,0 +1,55 @@
+#!/bin/bash
+# 
+# Started by:
+# paul@xelerance.com
+# Expanded by Leigh Honeywell
+# Leigh Honeywell
+#
+# License: GNU GENERAL PUBLIC LICENSE, Version 2
+#
+# verbose stuff: --verbose --progress --stats 
+#
+# set by individual scripts calling this one
+#export DATE=`date +%d`
+#export LIST=/root/Backup/backup.list
+#export EXCLUDE=/root/Backup/backup.exclude
+#export SSHKEY=/root/.ssh/id_dsa
+#export BACKUPSTORE=/vol/backup
+
+
+if [ -z $1 ]
+then
+	cmd="cat $LIST | egrep -v '^#'"
+else
+	cmd="cat $LIST | egrep $1 | egrep -v '^#'"
+fi
+
+for i in `echo $cmd|sh`
+do
+# Format is
+# beast.toronto.xelerance.com:22:/etc
+export HOSTNAME=`echo $i| awk -F: '{print $1;}'`
+export PORT=`echo $i|awk -F: '{print $2;}'`
+export DIRECTORY=`echo $i| awk -F: '{print $3;}'`
+export DIRECTORYBASE=`dirname $DIRECTORY`
+# Windows only
+# export RSYNC_PASSWORD="benelux"
+
+echo "----------------------------------------------------------------"
+echo "Backup of $HOSTNAME:$DIRECTORY through Current onto $BACKUPSTORE/$HOSTNAME/$DATE started at `date`"
+install -d $BACKUPSTORE/$HOSTNAME/Current
+if [ -d $BACKUPSTORE/$HOSTNAME/$DATE/$DIRECTORY ]
+then
+rm -r $BACKUPSTORE/$HOSTNAME/$DATE/$DIRECTORY
+fi
+install -d $BACKUPSTORE/$HOSTNAME/$DATE/$DIRECTORY
+rsync  --numeric-ids --compress  \
+ --rsh="/usr/bin/ssh -p $PORT -i $SSHKEY" -t --recursive --archive       --relative --sparse \
+ --one-file-system --delete --exclude-from=$EXCLUDE \
+ $HOSTNAME:$DIRECTORY $BACKUPSTORE/$HOSTNAME/Current
+echo "Creating hardlinked copy in $BACKUPSTORE/$HOSTNAME/$DATE"
+cp -al $BACKUPSTORE/$HOSTNAME/Current/$DIRECTORY $BACKUPSTORE/$HOSTNAME/$DATE/$DIRECTORYBASE
+
+echo "Backup finished at `date`"
+done
+
