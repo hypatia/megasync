@@ -11,6 +11,11 @@ export DATE=`date +%d`
 export LIST=/root/backup/backup.list
 export EXCLUDE=/root/backup/backup.exclude
 export SSHKEY=/root/.ssh/id_rsa
-export BACKUPSTORE=/root/backup/files
+
+# example for backups on a local drive
+# export BACKUPSTORE=/home/backup/files
+
+# example for backups on externam media
+export BACKUPSTORE=/media/Backup/files
 
 /bin/sh /root/backup/MegaSync

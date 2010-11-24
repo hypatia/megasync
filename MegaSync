@@ -32,8 +32,6 @@ export HOSTNAME=`echo $i| awk -F: '{print $1;}'`
 export PORT=`echo $i|awk -F: '{print $2;}'`
 export DIRECTORY=`echo $i| awk -F: '{print $3;}'`
 export DIRECTORYBASE=`dirname $DIRECTORY`
-# Windows only
-# export RSYNC_PASSWORD="benelux"
 
 echo "----------------------------------------------------------------"
 echo "Backup of $HOSTNAME:$DIRECTORY through Current onto $BACKUPSTORE/$HOSTNAME/$DATE started at `date`"
