@@ -1,8 +1,8 @@
 server1.example.com:22:/etc
 server1.example.com:22:/home
 
-localhost:/etc
-localhost:/home/username
+localhost:00:/etc
+localhost:00:/home/username
 
 server2.example.com:2222:/etc
 server2.example.com:2222:/home
